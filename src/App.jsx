@@ -1,227 +1,222 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function App() {
-  const [username, setUsername] = useState('angelshyju14-repo');
-  const [repoName, setRepoName] = useState('Deployee');
-  const [copiedIndex, setCopiedIndex] = useState(null);
-  const [completedSteps, setCompletedSteps] = useState({
-    1: true, // Step 1 initialized
-    2: false,
-    3: false,
-    4: false
-  });
+  const [theme, setTheme] = useState('light');
+  const [activeFilter, setActiveFilter] = useState('All');
+  const [selectedProject, setSelectedProject] = useState(null);
 
-  const handleCopy = (text, index) => {
-    navigator.clipboard.writeText(text);
-    setCopiedIndex(index);
-    setTimeout(() => setCopiedIndex(null), 2000);
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'light' ? 'dark' : 'light'));
   };
 
-  const toggleStep = (stepId) => {
-    setCompletedSteps(prev => ({ ...prev, [stepId]: !prev[stepId] }));
-  };
+  const projects = [
+    {
+      id: 1,
+      title: 'Aura Design System',
+      category: 'Design Systems',
+      tagClass: 'tag-sage',
+      year: '2026',
+      summary: 'A minimalist component architecture built for modern editorial and media platforms.',
+      detail: 'Aura features tokens for fluid typography, light & dark mode surfaces, and accessible focus indicators across 40+ atomic components.',
+      link: 'https://github.com/angelshyju14-repo/Deployee'
+    },
+    {
+      id: 2,
+      title: 'Vite Deploy Engine',
+      category: 'Tooling',
+      tagClass: 'tag-rose',
+      year: '2026',
+      summary: 'Automated static site generator & GitHub Pages publishing workflow for Windows developers.',
+      detail: 'Includes zero-config base path resolution, automated gh-pages branch deployment scripts, and instant dev server previews.',
+      link: 'https://github.com/angelshyju14-repo/Deployee'
+    },
+    {
+      id: 3,
+      title: 'Monolith Studio',
+      category: 'Web Apps',
+      tagClass: 'tag-amber',
+      year: '2025',
+      summary: 'High-performance digital workspace tailored for writers, creators, and visual artists.',
+      detail: 'Monolith provides real-time distraction-free writing, rich markdown exports, and seamless sync across cloud repositories.',
+      link: 'https://github.com/angelshyju14-repo/Deployee'
+    }
+  ];
 
-  const completedCount = Object.values(completedSteps).filter(Boolean).length;
-  const progressPercent = Math.round((completedCount / 4) * 100);
+  const articles = [
+    {
+      id: 1,
+      date: 'AUG 2026',
+      title: 'The Art of Editorial Web Aesthetics',
+      readTime: '4 min read',
+      excerpt: 'Exploring how serif typography, whitespace, and soft pastel palettes create enduring digital experiences.'
+    },
+    {
+      id: 2,
+      date: 'JUL 2026',
+      title: 'Seamless React & GitHub Pages Workflows',
+      readTime: '6 min read',
+      excerpt: 'How to automate build step pipelines and base path routing with Vite and gh-pages.'
+    },
+    {
+      id: 3,
+      date: 'MAY 2026',
+      title: 'Crafting Accessible Dark Mode Systems',
+      readTime: '5 min read',
+      excerpt: 'Strategies for maintaining semantic contrast ratios and soothing color tokens in CSS variables.'
+    }
+  ];
 
-  const remoteUrl = `https://github.com/${username}/${repoName}.git`;
-  const pagesUrl = `https://${username}.github.io/${repoName}`;
+  const filteredProjects = activeFilter === 'All' 
+    ? projects 
+    : projects.filter(p => p.category === activeFilter);
 
   return (
-    <div className="app-container">
-      {/* Header */}
-      <header className="hero-header">
-        <div className="badge">
-          <span className="badge-dot"></span>
-          Vite + React + GitHub Pages Ready
-        </div>
-        <h1 className="hero-title">React GitHub Deployment Hub</h1>
-        <p className="hero-subtitle">
-          Your React project is scaffolded and pre-configured for free live hosting on GitHub Pages.
+    <div className="editorial-container">
+      {/* Top Navigation */}
+      <nav className="editorial-nav">
+        <a href="#top" className="nav-brand">
+          <span className="brand-dot"></span>
+          DEPLOYEE
+        </a>
+
+        <ul className="nav-menu">
+          <li><a href="#works" className="nav-link">Selected Works</a></li>
+          <li><a href="#writing" className="nav-link">Writing</a></li>
+          <li><a href="#deploy" className="nav-link">Deployment Status</a></li>
+          <li>
+            <button className="theme-toggle-btn" onClick={toggleTheme} aria-label="Toggle Theme">
+              {theme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode'}
+            </button>
+          </li>
+        </ul>
+      </nav>
+
+      {/* Hero Section */}
+      <header className="hero-section">
+        <div className="editorial-pill">Editorial Collection • 2026</div>
+        <h1 className="hero-heading">
+          Crafting <em>thoughtful</em> digital experiences &amp; modern web platforms.
+        </h1>
+        <p className="hero-body">
+          A minimalist showcase of React web applications, custom design systems, and GitHub automation tools crafted with precision and soft pastel aesthetics.
         </p>
+        <div className="hero-actions">
+          <a href="#works" className="btn-primary">Explore Selected Works ↓</a>
+          <a href="https://github.com/angelshyju14-repo/Deployee" target="_blank" rel="noreferrer" className="btn-secondary">GitHub Repository ↗</a>
+        </div>
       </header>
 
-      {/* Dynamic Config Input */}
-      <div className="config-card">
-        <h2 className="config-title">⚡ Personalize Your Deployment Snippets</h2>
-        <div className="input-group">
-          <div className="input-field">
-            <label htmlFor="github-username">GitHub Username</label>
-            <input
-              id="github-username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value || 'YourUsername')}
-              placeholder="e.g. octocat"
-            />
-          </div>
-          <div className="input-field">
-            <label htmlFor="repo-name">Repository Name</label>
-            <input
-              id="repo-name"
-              type="text"
-              value={repoName}
-              onChange={(e) => setRepoName(e.target.value || 'my-react-app')}
-              placeholder="e.g. my-react-app"
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Progress Bar */}
-      <div className="progress-bar-card">
-        <div className="progress-header">
-          <span>Deployment Readiness Checklist</span>
-          <span>{completedCount} of 4 Steps Complete ({progressPercent}%)</span>
-        </div>
-        <div className="progress-track">
-          <div className="progress-fill" style={{ width: `${progressPercent}%` }}></div>
-        </div>
-      </div>
-
-      {/* Interactive Steps */}
-      <div className="steps-grid">
-
-        {/* STEP 1 */}
-        <div className={`step-card ${completedSteps[1] ? 'completed' : ''}`}>
-          <div className="step-top">
-            <div className="step-number">
-              <div className="step-circle">{completedSteps[1] ? '✓' : '1'}</div>
-              <h2 className="step-title">Create or Open React Project</h2>
-            </div>
-            <button className="check-button" onClick={() => toggleStep(1)}>
-              {completedSteps[1] ? '✓ Done' : 'Mark Complete'}
-            </button>
-          </div>
-          <p className="step-description">
-            Your React app has been created using modern Vite tooling right here in your workspace.
-          </p>
-          <div className="code-box">
-            <div className="code-header">
-              <span className="code-lang">PowerShell / Command Prompt</span>
-              <button 
-                className="copy-btn" 
-                onClick={() => handleCopy(`npm create vite@latest ${repoName} -- --template react\ncd ${repoName}\nnpm install`, 1)}
+      {/* Works Section */}
+      <section id="works">
+        <div className="section-header">
+          <h2 className="section-title">Selected Works</h2>
+          <div className="filter-bar">
+            {['All', 'Web Apps', 'Design Systems', 'Tooling'].map(cat => (
+              <button
+                key={cat}
+                className={`filter-pill ${activeFilter === cat ? 'active' : ''}`}
+                onClick={() => setActiveFilter(cat)}
               >
-                {copiedIndex === 1 ? '✓ Copied' : '📋 Copy'}
+                {cat}
               </button>
-            </div>
-            <pre className="code-content">
-{`npm create vite@latest ${repoName} -- --template react
-cd ${repoName}
-npm install`}
-            </pre>
+            ))}
           </div>
         </div>
 
-        {/* STEP 2 */}
-        <div className={`step-card ${completedSteps[2] ? 'completed' : ''}`}>
-          <div className="step-top">
-            <div className="step-number">
-              <div className="step-circle">{completedSteps[2] ? '✓' : '2'}</div>
-              <h2 className="step-title">Create New Repository on GitHub</h2>
+        <div className="projects-grid">
+          {filteredProjects.map(proj => (
+            <div 
+              key={proj.id} 
+              className="editorial-card"
+              onClick={() => setSelectedProject(proj)}
+            >
+              <div>
+                <div className="card-tag-row">
+                  <span className={`card-tag ${proj.tagClass}`}>{proj.category}</span>
+                  <span className="card-year">{proj.year}</span>
+                </div>
+                <h3 className="card-title">{proj.title}</h3>
+                <p className="card-desc">{proj.summary}</p>
+              </div>
+              <span className="card-link">View Details →</span>
             </div>
-            <button className="check-button" onClick={() => toggleStep(2)}>
-              {completedSteps[2] ? '✓ Done' : 'Mark Complete'}
-            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* Writing Section */}
+      <section id="writing">
+        <div className="section-header">
+          <h2 className="section-title">Journal &amp; Insights</h2>
+        </div>
+        <div className="articles-list">
+          {articles.map(art => (
+            <div key={art.id} className="article-row">
+              <div className="article-left">
+                <span className="article-date">{art.date}</span>
+                <span className="article-title">{art.title}</span>
+              </div>
+              <span className="article-read-time">{art.readTime}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Live GitHub Pages Deployment Bar */}
+      <section id="deploy">
+        <div className="deploy-widget">
+          <div className="widget-info">
+            <div className="widget-title">
+              <span className="status-indicator"></span>
+              Live GitHub Pages Deployment Active
+            </div>
+            <div className="widget-sub">
+              Repository: angelshyju14-repo/Deployee • Branch: main / gh-pages
+            </div>
           </div>
-          <p className="step-description">
-            Go to <a href="https://github.com/new" target="_blank" rel="noreferrer" style={{ color: 'var(--accent-cyan)' }}>GitHub New Repository</a>, 
-            name it <strong>{repoName}</strong>, set it to Public (or Private), and <em>do not check</em> README, .gitignore, or License options.
-          </p>
-          <div className="code-box">
-            <div className="code-header">
-              <span className="code-lang">Target Remote URL</span>
-              <button 
-                className="copy-btn" 
-                onClick={() => handleCopy(remoteUrl, 2)}
-              >
-                {copiedIndex === 2 ? '✓ Copied' : '📋 Copy'}
-              </button>
+          <a 
+            href="https://angelshyju14-repo.github.io/Deployee" 
+            target="_blank" 
+            rel="noreferrer" 
+            className="btn-primary"
+          >
+            Visit Live Site ↗
+          </a>
+        </div>
+      </section>
+
+      {/* Detail Modal */}
+      {selectedProject && (
+        <div className="modal-overlay" onClick={() => setSelectedProject(null)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <button className="modal-close" onClick={() => setSelectedProject(null)}>✕</button>
+            <div className="card-tag-row" style={{ marginTop: '8px' }}>
+              <span className={`card-tag ${selectedProject.tagClass}`}>{selectedProject.category}</span>
+              <span className="card-year">{selectedProject.year}</span>
             </div>
-            <pre className="code-content">{remoteUrl}</pre>
+            <h2 className="card-title" style={{ fontSize: '2rem', marginTop: '12px' }}>{selectedProject.title}</h2>
+            <p className="card-desc" style={{ fontSize: '1.05rem', margin: '16px 0 24px' }}>{selectedProject.detail}</p>
+            <a 
+              href={selectedProject.link} 
+              target="_blank" 
+              rel="noreferrer" 
+              className="btn-primary" 
+              style={{ display: 'inline-block' }}
+            >
+              Open on GitHub ↗
+            </a>
           </div>
         </div>
+      )}
 
-        {/* STEP 3 */}
-        <div className={`step-card ${completedSteps[3] ? 'completed' : ''}`}>
-          <div className="step-top">
-            <div className="step-number">
-              <div className="step-circle">{completedSteps[3] ? '✓' : '3'}</div>
-              <h2 className="step-title">Initialize Git & Link to GitHub</h2>
-            </div>
-            <button className="check-button" onClick={() => toggleStep(3)}>
-              {completedSteps[3] ? '✓ Done' : 'Mark Complete'}
-            </button>
-          </div>
-          <p className="step-description">
-            Run these commands inside your project folder to commit local code and push to GitHub:
-          </p>
-          <div className="code-box">
-            <div className="code-header">
-              <span className="code-lang">Git PowerShell Commands</span>
-              <button 
-                className="copy-btn" 
-                onClick={() => handleCopy(`git init\ngit add .\ngit commit -m "Initial React project commit"\ngit branch -M main\ngit remote add origin ${remoteUrl}\ngit push -u origin main`, 3)}
-              >
-                {copiedIndex === 3 ? '✓ Copied' : '📋 Copy'}
-              </button>
-            </div>
-            <pre className="code-content">
-{`# 1. Initialize Git in project directory
-git init
-
-# 2. Stage all project files
-git add .
-
-# 3. Create initial commit
-git commit -m "Initial React project commit"
-
-# 4. Rename default branch to main
-git branch -M main
-
-# 5. Link local project to your GitHub repository
-git remote add origin ${remoteUrl}
-
-# 6. Push code to GitHub
-git push -u origin main`}
-            </pre>
-          </div>
-        </div>
-
-        {/* STEP 4 */}
-        <div className={`step-card ${completedSteps[4] ? 'completed' : ''}`}>
-          <div className="step-top">
-            <div className="step-number">
-              <div className="step-circle">{completedSteps[4] ? '✓' : '4'}</div>
-              <h2 className="step-title">Deploy Free Live Site via GitHub Pages</h2>
-            </div>
-            <button className="check-button" onClick={() => toggleStep(4)}>
-              {completedSteps[4] ? '✓ Done' : 'Mark Complete'}
-            </button>
-          </div>
-          <p className="step-description">
-            We already configured <code>gh-pages</code> in your <code>package.json</code> and <code>vite.config.js</code>. 
-            Run the deploy script below to publish your app live to: <a href={pagesUrl} target="_blank" rel="noreferrer" style={{ color: 'var(--accent-cyan)' }}>{pagesUrl}</a>
-          </p>
-          <div className="code-box">
-            <div className="code-header">
-              <span className="code-lang">Deploy Command</span>
-              <button 
-                className="copy-btn" 
-                onClick={() => handleCopy(`npm run deploy`, 4)}
-              >
-                {copiedIndex === 4 ? '✓ Copied' : '📋 Copy'}
-              </button>
-            </div>
-            <pre className="code-content">npm run deploy</pre>
-          </div>
-        </div>
-
-      </div>
-
-      <footer className="footer-note">
-        ✨ Configured for Windows &amp; Vite • Live preview at <code>npm run dev</code>
+      {/* Footer */}
+      <footer className="editorial-footer" style={{ marginTop: '64px' }}>
+        <span>© 2026 DEPLOYEE Studio • Built with React &amp; Vite</span>
+        <span>Hosted free on GitHub Pages</span>
       </footer>
     </div>
   );
