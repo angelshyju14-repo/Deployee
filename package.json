@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://YourUsername.github.io/my-react-app",
+  "homepage": "https://angelshyju14-repo.github.io/Deployee",
   "scripts": {
     "dev": "vite",
     "predeploy": "npm run build",

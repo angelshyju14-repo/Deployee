@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 export default function App() {
-  const [username, setUsername] = useState('YourUsername');
-  const [repoName, setRepoName] = useState('my-react-app');
+  const [username, setUsername] = useState('angelshyju14-repo');
+  const [repoName, setRepoName] = useState('Deployee');
   const [copiedIndex, setCopiedIndex] = useState(null);
   const [completedSteps, setCompletedSteps] = useState({
     1: true, // Step 1 initialized
